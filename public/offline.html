@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline - Reel</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        background: #15101f;
+        color: #fbeeee;
+      }
+      .container { text-align: center; padding: 2rem; }
+      button {
+        background: #ff4d6a;
+        color: #15101f;
+        border: 0;
+        border-radius: 8px;
+        padding: 0.6rem 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>You're offline</h1>
+      <p>Open Reel once while online so your downloads are ready offline.</p>
+      <button onclick="window.location.reload()">Try again</button>
+    </div>
+  </body>
+</html>

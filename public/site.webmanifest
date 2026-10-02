@@ -1,0 +1,17 @@
+{
+  "id": "/",
+  "name": "Reel - Music videos, offline",
+  "short_name": "Reel",
+  "description": "Watch music videos anywhere, even without internet.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#15101f",
+  "theme_color": "#15101f",
+  "icons": [
+    { "src": "/icon/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
