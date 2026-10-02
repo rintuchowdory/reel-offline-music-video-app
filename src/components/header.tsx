@@ -20,13 +20,13 @@ export default function Header() {
             to="/playlists"
             className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
           >
-            <ListMusic className="size-4" /> Playlists
+            <ListMusic className="size-4" /> <span className="hidden sm:inline">Playlists</span>
           </Link>
           <Link
             to="/downloads"
             className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
           >
-            <Download className="size-4" /> Downloads
+            <Download className="size-4" /> <span className="hidden sm:inline">Downloads</span>
           </Link>
           <Authenticated>
             <SignInButton variant="secondary" size="sm" />

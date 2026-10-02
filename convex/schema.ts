@@ -15,7 +15,10 @@ export default defineSchema({
     artist: v.string(),
     videoStorageId: v.id("_storage"),
     thumbnailStorageId: v.optional(v.id("_storage")),
-  }),
+  })
+    .index("by_artist", ["artist"])
+    .searchIndex("search_title", { searchField: "title" })
+    .searchIndex("search_artist", { searchField: "artist" }),
 
   playlists: defineTable({
     ownerTokenIdentifier: v.string(),

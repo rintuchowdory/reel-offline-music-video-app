@@ -8,10 +8,15 @@ export type VideoItem = {
   thumbnailUrl: string | null;
 };
 
-export default function VideoCard({ video }: { video: VideoItem }) {
+export default function VideoCard({ video, index }: { video: VideoItem; index?: number }) {
   return (
     <Link to={`/watch/${video._id}`} className="group block cursor-pointer">
-      <div className="relative aspect-video overflow-hidden rounded-xl bg-muted">
+      <div className="relative aspect-video overflow-hidden rounded-xl bg-muted ring-1 ring-transparent transition-all duration-300 group-hover:-translate-y-1 group-hover:ring-primary/60 group-hover:shadow-lg group-hover:shadow-primary/25">
+        {index !== undefined && (
+          <span className="absolute left-2 top-2 z-10 rounded-md bg-black/60 px-2 py-0.5 font-[Syne] text-xs font-bold text-white backdrop-blur">
+            {String(index).padStart(2, "0")}
+          </span>
+        )}
         {video.thumbnailUrl ? (
           <img
             src={video.thumbnailUrl}
