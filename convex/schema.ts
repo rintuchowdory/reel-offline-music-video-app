@@ -29,6 +29,8 @@ export default defineSchema({
   playlistItems: defineTable({
     playlistId: v.id("playlists"),
     videoId: v.id("videos"),
+    // Manual order set by the reorder mutation; undefined = legacy insertion order
+    position: v.optional(v.number()),
   })
     .index("by_playlist", ["playlistId"])
     .index("by_playlist_and_video", ["playlistId", "videoId"]),
