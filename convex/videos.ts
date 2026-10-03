@@ -26,6 +26,7 @@ async function toItem(ctx: QueryCtx, video: Doc<"videos">) {
     _id: video._id,
     title: video.title,
     artist: video.artist,
+    kind: video.kind ?? "video",
     videoUrl: await ctx.storage.getUrl(video.videoStorageId),
     thumbnailUrl: video.thumbnailStorageId
       ? await ctx.storage.getUrl(video.thumbnailStorageId)
@@ -79,6 +80,7 @@ export const listForQueue = query({
         _id: video._id,
         title: video.title,
         artist: video.artist,
+        kind: video.kind ?? "video",
         thumbnailUrl: video.thumbnailStorageId
           ? await ctx.storage.getUrl(video.thumbnailStorageId)
           : null,
@@ -96,6 +98,7 @@ export const get = query({
       _id: video._id,
       title: video.title,
       artist: video.artist,
+      kind: video.kind ?? "video",
       videoUrl: await ctx.storage.getUrl(video.videoStorageId),
       thumbnailUrl: video.thumbnailStorageId
         ? await ctx.storage.getUrl(video.thumbnailStorageId)
@@ -118,10 +121,14 @@ export const create = mutation({
     artist: v.string(),
     videoStorageId: v.id("_storage"),
     thumbnailStorageId: v.optional(v.id("_storage")),
+    kind: v.optional(v.union(v.literal("video"), v.literal("audio"))),
   },
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
-    return await ctx.db.insert("videos", args);
+    return await ctx.db.insert("videos", {
+      ...args,
+      kind: args.kind ?? "video",
+    });
   },
 });
 

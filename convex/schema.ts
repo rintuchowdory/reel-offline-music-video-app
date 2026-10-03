@@ -15,6 +15,8 @@ export default defineSchema({
     artist: v.string(),
     videoStorageId: v.id("_storage"),
     thumbnailStorageId: v.optional(v.id("_storage")),
+    // audio-only tracks (songs) share the same table; missing = classic video
+    kind: v.optional(v.union(v.literal("video"), v.literal("audio"))),
   })
     .index("by_artist", ["artist"])
     .searchIndex("search_title", { searchField: "title" })

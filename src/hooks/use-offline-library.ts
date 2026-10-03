@@ -6,6 +6,7 @@ export type DownloadableVideo = {
   _id: string;
   title: string;
   artist: string;
+  kind?: "video" | "audio";
   videoUrl: string | null;
   thumbnailUrl: string | null;
 };
@@ -46,6 +47,7 @@ export async function downloadVideo(video: DownloadableVideo) {
       id: video._id,
       title: video.title,
       artist: video.artist,
+      kind: video.kind ?? "video",
       video: blob,
       thumbnail,
       size: blob.size,

@@ -6,12 +6,18 @@ export type VideoItem = {
   title: string;
   artist: string;
   thumbnailUrl: string | null;
+  kind?: "video" | "audio";
 };
 
 export default function VideoCard({ video, index }: { video: VideoItem; index?: number }) {
   return (
     <Link to={`/watch/${video._id}`} className="group block cursor-pointer">
       <div className="relative aspect-video overflow-hidden rounded-xl bg-muted ring-1 ring-transparent transition-all duration-300 group-hover:-translate-y-1 group-hover:ring-primary/60 group-hover:shadow-lg group-hover:shadow-primary/25">
+        {video.kind === "audio" && (
+          <span className="absolute right-2 top-2 z-10 rounded-md bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-foreground backdrop-blur">
+            Audio
+          </span>
+        )}
         {index !== undefined && (
           <span className="absolute left-2 top-2 z-10 rounded-md bg-black/60 px-2 py-0.5 font-[Syne] text-xs font-bold text-white backdrop-blur">
             {String(index).padStart(2, "0")}

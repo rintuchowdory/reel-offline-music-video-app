@@ -23,8 +23,13 @@ function DownloadCard({ item }: { item: OfflineVideo }) {
   const thumb = useThumbUrl(item.thumbnail);
   return (
     <div className="group">
-      <Link to={`/watch/${item.id}`} className="block cursor-pointer">
-        <div className="aspect-video overflow-hidden rounded-xl bg-muted">
+      <Link to={`/watch/${item.id}`} className="group block cursor-pointer">
+        <div className="relative aspect-video overflow-hidden rounded-xl bg-muted">
+          {(item.kind ?? "video") === "audio" && (
+            <span className="absolute right-2 top-2 z-10 rounded-md bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-foreground">
+              Audio
+            </span>
+          )}
           {thumb ? (
             <img src={thumb} alt={item.title} className="size-full object-cover" />
           ) : (

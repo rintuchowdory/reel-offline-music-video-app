@@ -112,8 +112,8 @@ export default function Index() {
               </span>
             </h1>
             <p className="max-w-md text-muted-foreground">
-              Download your favorite videos once and play them on a plane, in a tunnel or in the
-              middle of nowhere.
+              Download your favorite videos and songs once and play them on a plane, in a tunnel
+              or in the middle of nowhere.
             </p>
             <div className="flex flex-wrap items-center gap-2">
               <PlayAllButton />

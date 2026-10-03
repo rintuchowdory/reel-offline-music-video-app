@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Authenticated, useMutation, useQuery } from "convex/react";
-import { ArrowLeft, ListPlus, Trash2 } from "lucide-react";
+import { ArrowLeft, ListPlus, Music, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/convex/_generated/api.js";
 import type { Id } from "@/convex/_generated/dataModel.d.ts";
@@ -18,6 +18,7 @@ type Playable = {
   _id: string;
   title: string;
   artist: string;
+  kind?: "video" | "audio";
   videoUrl: string | null;
   thumbnailUrl: string | null;
 };
@@ -52,6 +53,7 @@ function useOfflinePlayable(id: string | undefined): Playable | null {
       _id: saved.id,
       title: saved.title,
       artist: saved.artist,
+      kind: saved.kind ?? "video",
       videoUrl: URL.createObjectURL(saved.video),
       thumbnailUrl: saved.thumbnail ? URL.createObjectURL(saved.thumbnail) : null,
     };
@@ -83,17 +85,44 @@ export default function Watch() {
         <p className="py-20 text-center text-muted-foreground">Video not found.</p>
       ) : (
         <>
-          <video
-            key={video._id}
-            src={video.videoUrl}
-            poster={video.thumbnailUrl ?? undefined}
-            controls
-            autoPlay
-            loop={repeat === "one"}
-            onEnded={handleEnded}
-            playsInline
-            className="aspect-video w-full rounded-xl bg-black"
-          />
+          {video.kind === "audio" ? (
+            <>
+              <div className="aspect-video w-full overflow-hidden rounded-xl bg-black">
+                {video.thumbnailUrl ? (
+                  <img
+                    src={video.thumbnailUrl}
+                    alt={video.title}
+                    className="size-full object-cover opacity-80"
+                  />
+                ) : (
+                  <div className="flex size-full items-center justify-center bg-gradient-to-br from-primary/50 to-secondary">
+                    <Music className="size-16 text-foreground/60" />
+                  </div>
+                )}
+              </div>
+              <audio
+                key={video._id}
+                src={video.videoUrl}
+                controls
+                autoPlay
+                loop={repeat === "one"}
+                onEnded={handleEnded}
+                className="w-full"
+              />
+            </>
+          ) : (
+            <video
+              key={video._id}
+              src={video.videoUrl}
+              poster={video.thumbnailUrl ?? undefined}
+              controls
+              autoPlay
+              loop={repeat === "one"}
+              onEnded={handleEnded}
+              playsInline
+              className="aspect-video w-full rounded-xl bg-black"
+            />
+          )}
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h1 className="font-[Syne] text-3xl font-bold">{video.title}</h1>

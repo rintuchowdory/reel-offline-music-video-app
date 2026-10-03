@@ -5,6 +5,7 @@ export type OfflineVideo = {
   id: string;
   title: string;
   artist: string;
+  kind?: "video" | "audio"; // older saved records have no kind: treat as video
   video: Blob;
   thumbnail: Blob | null;
   size: number;

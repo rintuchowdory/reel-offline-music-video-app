@@ -23,7 +23,7 @@ export default function UploadVideoDialog() {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
-  const [video, setVideo] = useState<File | null>(null);
+  const [media, setMedia] = useState<File | null>(null);
   const [thumb, setThumb] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -40,31 +40,34 @@ export default function UploadVideoDialog() {
   };
 
   const submit = async () => {
-    if (!video || !title.trim() || !artist.trim()) {
-      toast.error("Add a title, artist and video file");
+    if (!media || !title.trim() || !artist.trim()) {
+      toast.error("Add a title, artist and a file");
       return;
     }
+    const kind = media.type.startsWith("audio") ? ("audio" as const) : ("video" as const);
     setBusy(true);
     try {
-      const videoStorageId = await upload(video);
+      const videoStorageId = await upload(media);
       const thumbnailStorageId = thumb ? await upload(thumb) : undefined;
       await createVideo({
         title: title.trim(),
         artist: artist.trim(),
         videoStorageId,
         thumbnailStorageId,
+        // Only send for audio so video uploads stay identical on older backends
+        ...(kind === "audio" ? { kind } : {}),
       });
-      toast.success("Video added");
+      toast.success(kind === "audio" ? "Song added" : "Video added");
       setOpen(false);
       setTitle("");
       setArtist("");
-      setVideo(null);
+      setMedia(null);
       setThumb(null);
     } catch (e) {
       toast.error(
         e instanceof ConvexError
           ? (e.data as { message: string }).message
-          : "Could not add video",
+          : "Could not add this track",
       );
     } finally {
       setBusy(false);
@@ -75,12 +78,12 @@ export default function UploadVideoDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Upload className="size-4" /> Add video
+          <Upload className="size-4" /> Add music
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add a music video</DialogTitle>
+          <DialogTitle>Add a song or music video</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div className="space-y-2">
@@ -92,8 +95,8 @@ export default function UploadVideoDialog() {
             <Input id="artist" placeholder="M83" value={artist} onChange={(e) => setArtist(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="video">Video file</Label>
-            <Input id="video" type="file" accept="video/*" onChange={(e) => setVideo(e.target.files?.[0] ?? null)} />
+            <Label htmlFor="video">Audio or video file</Label>
+            <Input id="video" type="file" accept="audio/*,video/*" onChange={(e) => setMedia(e.target.files?.[0] ?? null)} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="thumb">Thumbnail (optional)</Label>
