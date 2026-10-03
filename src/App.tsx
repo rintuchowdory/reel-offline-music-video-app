@@ -15,7 +15,7 @@ export default function App() {
   useServiceWorker();
   return (
     <DefaultProviders>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <PlayerProvider>
         <Routes>
           <Route path="/auth/callback" element={<AuthCallback />} />

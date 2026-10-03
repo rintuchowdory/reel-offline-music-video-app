@@ -1,0 +1,58 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        env:
+          VITE_CONVEX_URL: https://amiable-mosquito-371.convex.cloud
+          VITE_HERCULES_OIDC_AUTHORITY: https://01m3y4mq2hhsgbe235d46w70ka.hercules-auth.com
+          VITE_HERCULES_OIDC_CLIENT_ID: uMOlAoOnbZqxFSULOhSVFYxWkNyyKhTW
+          VITE_HERCULES_WEBSITE_ID: 01M3Y4MQ2HHSGBE235D46W70KA
+        run: pnpm exec vite build --base=/reel-offline-music-video-app/
+
+      # GitHub Pages has no SPA fallback: serve the app shell as the 404 page
+      # so deep links like /playlists boot the app instead of showing 404.
+      - name: SPA fallback
+        run: cp dist/index.html dist/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

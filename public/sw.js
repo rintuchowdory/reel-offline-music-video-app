@@ -1,16 +1,18 @@
 const CACHE_NAME = "app-assets-v2";
-const OFFLINE_URL = "/offline.html";
+// Base path of the app ("/" at the domain root, or "/reel-offline-music-video-app/" on GitHub Pages).
+const BASE = new URL(".", self.location.href).pathname;
+const OFFLINE_URL = `${BASE}offline.html`;
 // The SPA serves the same HTML (the app shell) for every route. The last shell
 // loaded online is saved under this key so the app can open offline.
-const SHELL_URL = "/";
+const SHELL_URL = BASE.endsWith("/") ? BASE : `${BASE}/`;
 // Never precache the shell at install. Its HTML embeds Vite-hashed asset URLs,
 // and only a shell saved during a real page load has its chunks cached with it.
 const urlsToCache = [
   OFFLINE_URL,
-  "/icon/icon-192.png",
-  "/icon/icon-512.png",
-  "/icon/icon-maskable-192.png",
-  "/icon/icon-maskable-512.png",
+  `${BASE}icon/icon-192.png`,
+  `${BASE}icon/icon-512.png`,
+  `${BASE}icon/icon-maskable-192.png`,
+  `${BASE}icon/icon-maskable-512.png`,
 ];
 const matchCached = (request) => caches.match(request, { cacheName: CACHE_NAME });
 const isHtml = (response) => (response.headers.get("content-type") ?? "").includes("text/html");
@@ -35,7 +37,7 @@ self.addEventListener("fetch", (event) => {
   }
   // Cross-origin (Convex file storage, fonts) is handled by the browser
   if (url.origin !== self.location.origin) return;
-  if (url.pathname.startsWith("/auth")) return;
+  if (url.pathname.startsWith(`${BASE}auth`)) return;
 
   if (event.request.mode === "navigate") {
     event.respondWith(
@@ -56,7 +58,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (!url.pathname.startsWith("/assets/") && !urlsToCache.includes(url.pathname)) return;
+  if (!url.pathname.startsWith(`${BASE}assets/`) && !urlsToCache.includes(url.pathname)) return;
 
   event.respondWith(
     fetch(event.request)
